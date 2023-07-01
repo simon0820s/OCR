@@ -2,7 +2,7 @@ from prepare_img import run as prepare_img
 from evaluate import run as evaluate
 
 from flask import Flask, request, jsonify
-from models import easy, tesseract
+from models import easy, tesseract, quality_validator
 
 app = Flask(__name__)
 
@@ -15,6 +15,7 @@ def upload():
     img_b64 = data.get("image")
     #Function input: imgb64 output: binary img with modifications
     img = prepare_img(img_b64)
+    quality_validator.run(img)
     
     #Get Name
     input_name = data.get("name")
