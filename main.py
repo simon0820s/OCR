@@ -21,17 +21,22 @@ def upload():
     
     #Get ID
     input_id = data.get("id")
+    
+    img_results = quality_validator.run(img)
+    
+    if img_results["ImgIsOK?"]:
+        #Function input: binary-img output: String result of Optical Character Recognition
+        result = easy.reader(img)
 
-    #Function input: binary-img output: String result of Optical Character Recognition
-    result = easy.reader(img)
+        #Function input: Lists of result and input Json output: Boolean value if the Lists elements match
+        value = evaluate(input_name, input_id, result)
 
-    #Function input: Lists of result and input Json output: Boolean value if the Lists elements match
-    value = evaluate(input_name, input_id, result)
+        #Create a object with the finally information to return
+        output = {"isOk": value, "imgIsOk": img_results["ImgIsOK?"], "img_reults":img_results, "result": result}
 
-    #Create a object with the finally information to return
-    output = {"isOk": value, "result": result}
-
-    return jsonify(output)
+        return jsonify(output)
+    else:
+        return jsonify(img_results)
 
 
 if __name__ == "__main__":
